@@ -49,11 +49,6 @@
             <frameName>${name}_link</frameName>
           </plugin>
         </xacro:if>
-        <xacro:if value="${gazebo_version == 'gazebo'}">
-          <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
-            <render_engine>ogre2</render_engine>
-          </plugin>
-        </xacro:if>
       </sensor>
       <material>Gazebo/DarkGrey</material>
     </gazebo>
