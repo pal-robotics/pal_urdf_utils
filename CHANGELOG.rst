@@ -2,6 +2,13 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* remove system plugin from talos imu
+* remove sensor plugin from all laser xacro gazebo
+* remove sensors system plugin from model declaration
+* Contributors: thomasung
+
 2.5.4 (2026-01-29)
 ------------------
 * Use package instead of find for meshes lookup
