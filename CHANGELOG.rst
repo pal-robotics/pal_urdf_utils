@@ -2,8 +2,8 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.5.5 (2026-03-11)
+------------------
 * remove system plugin from talos imu
 * remove sensor plugin from all laser xacro gazebo
 * remove sensors system plugin from model declaration
