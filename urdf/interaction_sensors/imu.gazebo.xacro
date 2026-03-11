@@ -51,9 +51,6 @@
             </ros>
           </plugin>
         </xacro:if>
-        <xacro:if value="${gazebo_version == 'gazebo'}">
-          <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"></plugin>
-        </xacro:if>
       </sensor>
     </gazebo>
 
