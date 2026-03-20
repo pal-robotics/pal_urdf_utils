@@ -21,39 +21,29 @@
   
   <xacro:macro name="realsense_d435_rgbd_camera_gazebo" params="name" >
 
-    <gazebo reference="${name}_link">
-      <xacro:if value="${gazebo_version == 'classic'}">
-        <xacro:property name="camera_type" value="depth"/>
-      </xacro:if>
-      <xacro:if value="${gazebo_version == 'gazebo'}">
-        <xacro:property name="camera_type" value="rgbd_camera"/>
-      </xacro:if>
+    <xacro:if value="${gazebo_version == 'classic'}">
+      <xacro:property name="camera_type" value="depth"/>
+    </xacro:if>
+    <xacro:if value="${gazebo_version == 'gazebo'}">
+      <xacro:property name="camera_type" value="rgbd_camera"/>
+    </xacro:if>
 
-      <sensor name="${name}_frame_sensor" type="${camera_type}">
-        <xacro:if value="${gazebo_version == 'gazebo'}">
-          <topic>${name}</topic>
-          <gz_frame_id>${name}_color_frame</gz_frame_id>
-        </xacro:if>
-        <always_on>true</always_on>
-        <update_rate>30</update_rate>
-        <visualize>true</visualize>
+    <gazebo reference="${name}_link">
+      <sensor name="${name}_frame_sensor" type="camera">
+        <always_on>1</always_on>
+        <gz_frame_id>rgbd_camera_color_optical_frame</gz_frame_id>
+        <update_rate>30.0</update_rate>
+        <visualize>1</visualize>
+        <topic>${name}</topic>
         <camera name="${name}">
+          <camera_info_topic>${name}/color/camera_info</camera_info_topic>
           <horizontal_fov>${85.2*deg_to_rad}</horizontal_fov>
           <vertical_fov>${58.0*deg_to_rad}</vertical_fov>
           <image>
-            <format>B8G8R8</format>
-            <width>848</width>
+            <width>640</width>
             <height>480</height>
+            <format>B8G8R8</format>
           </image>
-          <clip>
-            <near>0.3</near>
-            <far>3.0</far>
-          </clip>
-          <noise>
-            <type>gaussian</type>
-            <mean>0.0</mean>
-            <stddev>0.100</stddev>
-          </noise>
         </camera>
         <xacro:if value="${gazebo_version == 'classic'}">
           <plugin name="${name}" filename="libgazebo_ros_camera.so">
@@ -162,9 +152,43 @@
                   </publisher>
                 </topic>
               </qos>
-            </ros>  
+            </ros>
           </plugin>
         </xacro:if>
+      </sensor>
+      <sensor name="${name}_frame_depth_sensor" type="rgbd_camera">
+        <always_on>1</always_on>
+        <gz_frame_id>${name}_optical_frame</gz_frame_id>
+        <update_rate>30.0</update_rate>
+        <visualize>1</visualize>
+        <topic>${name}</topic>
+        <camera name="rgbd_camera_frame">
+          <camera_info_topic>${name}/depth/camera_info</camera_info_topic>
+          <horizontal_fov>${85.2*deg_to_rad}</horizontal_fov>
+          <vertical_fov>${58.0*deg_to_rad}</vertical_fov>
+          <image>
+            <format>R8G8B8</format>
+            <width>320</width>
+            <height>240</height>
+          </image>
+          <clip>
+            <near>0.45</near>
+            <far>10.0</far>
+          </clip>
+          <depth_camera>
+            <clip>
+              <near>0.25</near>
+              <far>3.0</far>
+            </clip>
+          </depth_camera>
+          <distortion>
+            <k1>0.0</k1>
+            <k2>0.0</k2>
+            <k3>0.0</k3>
+            <p1>0.0</p1>
+            <p2>0.0</p2>
+          </distortion>
+        </camera>
       </sensor>
     </gazebo>
 
