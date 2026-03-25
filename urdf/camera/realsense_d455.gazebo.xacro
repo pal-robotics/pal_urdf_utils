@@ -26,34 +26,25 @@
         <xacro:property name="camera_type" value="depth"/>
       </xacro:if>
       <xacro:if value="${gazebo_version == 'gazebo'}">
-        <xacro:property name="camera_type" value="rgbd_camera"/>
+        <xacro:property name="camera_type" value="camera"/>
       </xacro:if>
 
       <sensor name="${name}" type="${camera_type}">
         <xacro:if value="${gazebo_version == 'gazebo'}">
-          <topic>${name}</topic>
+          <topic>${name}/color</topic>
           <gz_frame_id>${name}_depth_optical_frame</gz_frame_id>
         </xacro:if>
         <camera name="${name}">
-          <horizontal_fov>${85.2*deg_to_rad}</horizontal_fov>
-          <vertical_fov>${58.0*deg_to_rad}</vertical_fov>
+          <horizontal_fov>${86.0*deg_to_rad}</horizontal_fov>
+          <vertical_fov>${57.0*deg_to_rad}</vertical_fov>
           <always_on>true</always_on>
           <update_rate>30</update_rate>
           <visualize>true</visualize>
           <image>
             <format>B8G8R8</format>
-            <width>848</width>
+            <width>640</width>
             <height>480</height>
           </image>
-          <clip>
-            <near>0.3</near>
-            <far>3.0</far>
-          </clip>
-          <noise>
-            <type>gaussian</type>
-            <mean>0.0</mean>
-            <stddev>0.100</stddev>
-          </noise>
         </camera>
         <xacro:if value="${gazebo_version == 'classic'}">
           <plugin name="${name}" filename="libgazebo_ros_camera.so">
@@ -166,6 +157,30 @@
           </plugin>
         </xacro:if>
       </sensor>
+      <xacro:if value="${gazebo_version == 'gazebo'}">
+        <sensor name="${name}_frame_depth_sensor" type="rgbd_camera">
+          <always_on>1</always_on>
+          <gz_frame_id>${name}_depth_frame</gz_frame_id>
+          <update_rate>30.0</update_rate>
+          <visualize>1</visualize>
+          <topic>${name}/depth</topic>
+          <camera name="rgbd_camera_frame">
+            <horizontal_fov>${86.0*deg_to_rad}</horizontal_fov>
+            <vertical_fov>${57.0*deg_to_rad}</vertical_fov>
+            <image>
+              <width>640</width>
+              <height>480</height>
+              <format>B8G8R8</format>
+            </image>
+            <depth_camera>
+              <clip>
+                <near>0.6</near>
+                <far>6.0</far>
+              </clip>
+            </depth_camera>
+          </camera>
+        </sensor>
+      </xacro:if>
 
       <!-- IMU Sensor -->
       <sensor name="${name}_imu_sensor" type="imu">
