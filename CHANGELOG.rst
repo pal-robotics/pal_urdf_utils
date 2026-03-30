@@ -2,6 +2,13 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Port realsense D435 and D455 to new Gazebo
+* update depth camera
+* New gazebo
+* Contributors: thomas.peyrucain, thomaspeyrucain
+
 2.5.5 (2026-03-11)
 ------------------
 * remove system plugin from talos imu
