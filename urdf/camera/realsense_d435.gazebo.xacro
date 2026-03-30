@@ -21,138 +21,168 @@
   
   <xacro:macro name="realsense_d435_rgbd_camera_gazebo" params="name" >
 
+    <xacro:if value="${gazebo_version == 'classic'}">
+      <xacro:property name="camera_type" value="depth"/>
+    </xacro:if>
+    <xacro:if value="${gazebo_version == 'gazebo'}">
+      <xacro:property name="camera_type" value="camera"/>
+    </xacro:if>
+
     <gazebo reference="${name}_link">
-      <sensor name="${name}" type="depth">
+      <sensor name="${name}" type="${camera_type}">
+        <always_on>1</always_on>
+        <gz_frame_id>${name}_color_optical_frame</gz_frame_id>
+        <update_rate>30.0</update_rate>
+        <visualize>1</visualize>
+        <topic>${name}/color</topic>
         <camera name="${name}">
           <horizontal_fov>${85.2*deg_to_rad}</horizontal_fov>
           <vertical_fov>${58.0*deg_to_rad}</vertical_fov>
-          <always_on>true</always_on>
-          <update_rate>30</update_rate>
-          <visualize>true</visualize>
           <image>
-            <format>B8G8R8</format>
-            <width>848</width>
+            <width>640</width>
             <height>480</height>
+            <format>B8G8R8</format>
           </image>
           <clip>
-            <near>0.3</near>
-            <far>3.0</far>
+            <near>0.1</near>
+            <far>10.0</far>
           </clip>
-          <noise>
-            <type>gaussian</type>
-            <mean>0.0</mean>
-            <stddev>0.100</stddev>
-          </noise>
         </camera>
-        <plugin name="${name}" filename="libgazebo_ros_camera.so">
-          <frame_name>${name}_depth_optical_frame</frame_name>
-          <min_depth>0.1</min_depth>
-          <max_depth>10.0</max_depth>
-          <ros>
-            <namespace>${namespace}</namespace>
-            <remapping>${name}/image_raw:=${name}/color/image_raw</remapping>
-            <remapping>${name}/camera_info:=${name}/color/camera_info</remapping>
-            <remapping>${name}/image_raw/compressed:=${name}/color/image_raw/compressed</remapping>
-            <remapping>${name}/image_raw/compressedDepth:=${name}/color/image_raw/compressedDepth</remapping>
-            <remapping>${name}/image_raw/theora:=${name}/color/image_raw/theora</remapping>
-            <remapping>${name}/points:=${name}/depth/color/points</remapping>
-            <remapping>${name}/depth/image_raw:=${name}/depth/image_rect_raw</remapping>
-            <remapping>${name}/depth/image_raw/compressed:=${name}/depth/image_rect_raw/compressed</remapping>
-            <remapping>${name}/depth/image_raw/compressedDepth:=${name}/depth/image_rect_raw/compressedDepth</remapping>
-            <remapping>${name}/depth/image_raw/theora:=${name}/depth/image_rect_raw/theora</remapping>
-            <qos>
-              <topic name="${name}/color/image_raw">
-                <publisher>
-                  <reliability>best_effort</reliability>
-                  <durability>volatile</durability>
-                  <history depth="1">keep_last</history>
-                  <liveliness>automatic</liveliness>
-                </publisher>
-              </topic>
-              <topic name="${name}/color/camera_info">
-                <publisher>
-                  <reliability>best_effort</reliability>
-                  <durability>volatile</durability>
-                  <history depth="1">keep_last</history>
-                  <liveliness>automatic</liveliness>
-                </publisher>
-              </topic>
-              <topic name="${name}/color/image_raw/compressed">
-                <publisher>
-                  <reliability>best_effort</reliability>
-                  <durability>volatile</durability>
-                  <history depth="1">keep_last</history>
-                  <liveliness>automatic</liveliness>
-                </publisher>
-              </topic>
-              <topic name="${name}/color/image_raw/compressedDepth">
-                <publisher>
-                  <reliability>best_effort</reliability>
-                  <durability>volatile</durability>
-                  <history depth="1">keep_last</history>
-                  <liveliness>automatic</liveliness>
-                </publisher>
-              </topic>
-              <topic name="${name}/color/image_raw/theora">
-                <publisher>
-                  <reliability>best_effort</reliability>
-                  <durability>volatile</durability>
-                  <history depth="1">keep_last</history>
-                  <liveliness>automatic</liveliness>
-                </publisher>
-              </topic>
-              <topic name="${name}/depth/camera_info">
-                <publisher>
-                  <reliability>best_effort</reliability>
-                  <durability>volatile</durability>
-                  <history depth="1">keep_last</history>
-                  <liveliness>automatic</liveliness>
-                </publisher>
-              </topic>
-              <topic name="${name}/depth/color/points">
-                <publisher>
-                  <reliability>best_effort</reliability>
-                  <durability>volatile</durability>
-                  <history depth="1">keep_last</history>
-                  <liveliness>automatic</liveliness>
-                </publisher>
-              </topic>
-              <topic name="${name}/depth/image_rect_raw">
-                <publisher>
-                  <reliability>best_effort</reliability>
-                  <durability>volatile</durability>
-                  <history depth="1">keep_last</history>
-                  <liveliness>automatic</liveliness>
-                </publisher>
-              </topic>
-              <topic name="${name}/depth/image_rect_raw/compressed">
-                <publisher>
-                  <reliability>best_effort</reliability>
-                  <durability>volatile</durability>
-                  <history depth="1">keep_last</history>
-                  <liveliness>automatic</liveliness>
-                </publisher>
-              </topic>
-              <topic name="${name}/depth/image_rect_raw/compressedDepth">
-                <publisher>
-                  <reliability>best_effort</reliability>
-                  <durability>volatile</durability>
-                  <history depth="1">keep_last</history>
-                  <liveliness>automatic</liveliness>
-                </publisher>
-              </topic>
-              <topic name="${name}/depth/image_rect_raw/theora">
-                <publisher>
-                  <reliability>best_effort</reliability>
-                  <durability>volatile</durability>
-                  <history depth="1">keep_last</history>
-                  <liveliness>automatic</liveliness>
-                </publisher>
-              </topic>
-            </qos>
-          </ros>  
-        </plugin>
+        <xacro:if value="${gazebo_version == 'classic'}">
+          <plugin name="${name}" filename="libgazebo_ros_camera.so">
+            <frame_name>${name}_depth_optical_frame</frame_name>
+            <min_depth>0.1</min_depth>
+            <max_depth>10.0</max_depth>
+            <ros>
+              <namespace>${namespace}</namespace>
+              <remapping>${name}/image_raw:=${name}/color/image_raw</remapping>
+              <remapping>${name}/camera_info:=${name}/color/camera_info</remapping>
+              <remapping>${name}/image_raw/compressed:=${name}/color/image_raw/compressed</remapping>
+              <remapping>${name}/image_raw/compressedDepth:=${name}/color/image_raw/compressedDepth</remapping>
+              <remapping>${name}/image_raw/theora:=${name}/color/image_raw/theora</remapping>
+              <remapping>${name}/points:=${name}/depth/color/points</remapping>
+              <remapping>${name}/depth/image_raw:=${name}/depth/image_rect_raw</remapping>
+              <remapping>${name}/depth/image_raw/compressed:=${name}/depth/image_rect_raw/compressed</remapping>
+              <remapping>${name}/depth/image_raw/compressedDepth:=${name}/depth/image_rect_raw/compressedDepth</remapping>
+              <remapping>${name}/depth/image_raw/theora:=${name}/depth/image_rect_raw/theora</remapping>
+              <qos>
+                <topic name="${name}/color/image_raw">
+                  <publisher>
+                    <reliability>best_effort</reliability>
+                    <durability>volatile</durability>
+                    <history depth="1">keep_last</history>
+                    <liveliness>automatic</liveliness>
+                  </publisher>
+                </topic>
+                <topic name="${name}/color/camera_info">
+                  <publisher>
+                    <reliability>best_effort</reliability>
+                    <durability>volatile</durability>
+                    <history depth="1">keep_last</history>
+                    <liveliness>automatic</liveliness>
+                  </publisher>
+                </topic>
+                <topic name="${name}/color/image_raw/compressed">
+                  <publisher>
+                    <reliability>best_effort</reliability>
+                    <durability>volatile</durability>
+                    <history depth="1">keep_last</history>
+                    <liveliness>automatic</liveliness>
+                  </publisher>
+                </topic>
+                <topic name="${name}/color/image_raw/compressedDepth">
+                  <publisher>
+                    <reliability>best_effort</reliability>
+                    <durability>volatile</durability>
+                    <history depth="1">keep_last</history>
+                    <liveliness>automatic</liveliness>
+                  </publisher>
+                </topic>
+                <topic name="${name}/color/image_raw/theora">
+                  <publisher>
+                    <reliability>best_effort</reliability>
+                    <durability>volatile</durability>
+                    <history depth="1">keep_last</history>
+                    <liveliness>automatic</liveliness>
+                  </publisher>
+                </topic>
+                <topic name="${name}/depth/camera_info">
+                  <publisher>
+                    <reliability>best_effort</reliability>
+                    <durability>volatile</durability>
+                    <history depth="1">keep_last</history>
+                    <liveliness>automatic</liveliness>
+                  </publisher>
+                </topic>
+                <topic name="${name}/depth/color/points">
+                  <publisher>
+                    <reliability>best_effort</reliability>
+                    <durability>volatile</durability>
+                    <history depth="1">keep_last</history>
+                    <liveliness>automatic</liveliness>
+                  </publisher>
+                </topic>
+                <topic name="${name}/depth/image_rect_raw">
+                  <publisher>
+                    <reliability>best_effort</reliability>
+                    <durability>volatile</durability>
+                    <history depth="1">keep_last</history>
+                    <liveliness>automatic</liveliness>
+                  </publisher>
+                </topic>
+                <topic name="${name}/depth/image_rect_raw/compressed">
+                  <publisher>
+                    <reliability>best_effort</reliability>
+                    <durability>volatile</durability>
+                    <history depth="1">keep_last</history>
+                    <liveliness>automatic</liveliness>
+                  </publisher>
+                </topic>
+                <topic name="${name}/depth/image_rect_raw/compressedDepth">
+                  <publisher>
+                    <reliability>best_effort</reliability>
+                    <durability>volatile</durability>
+                    <history depth="1">keep_last</history>
+                    <liveliness>automatic</liveliness>
+                  </publisher>
+                </topic>
+                <topic name="${name}/depth/image_rect_raw/theora">
+                  <publisher>
+                    <reliability>best_effort</reliability>
+                    <durability>volatile</durability>
+                    <history depth="1">keep_last</history>
+                    <liveliness>automatic</liveliness>
+                  </publisher>
+                </topic>
+              </qos>
+            </ros>
+          </plugin>
+        </xacro:if>
       </sensor>
+      <xacro:if value="${gazebo_version == 'gazebo'}">
+        <sensor name="${name}_frame_depth_sensor" type="rgbd_camera">
+          <always_on>1</always_on>
+          <gz_frame_id>${name}_depth_frame</gz_frame_id>
+          <update_rate>30.0</update_rate>
+          <visualize>1</visualize>
+          <topic>${name}/depth</topic>
+          <camera name="rgbd_camera_frame">
+            <horizontal_fov>${85.2*deg_to_rad}</horizontal_fov>
+            <vertical_fov>${58.0*deg_to_rad}</vertical_fov>
+            <image>
+              <width>640</width>
+              <height>480</height>
+              <format>B8G8R8</format>
+            </image>
+            <depth_camera>
+              <clip>
+                <near>0.3</near>
+                <far>3.0</far>
+              </clip>
+            </depth_camera>
+          </camera>
+        </sensor>
+      </xacro:if>
     </gazebo>
 
   </xacro:macro>
