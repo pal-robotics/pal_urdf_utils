@@ -20,7 +20,7 @@
   <xacro:include filename="$(find pal_urdf_utils)/urdf/camera/realsense_d435.gazebo.xacro" />
 
   <!-- Macro -->
-  <xacro:macro name="realsense_d435" params="parent *origin name:=camera use_nominal_extrinsics:=false add_plug:=false use_mesh:=true">
+  <xacro:macro name="realsense_d435" params="parent *origin name:=camera use_nominal_extrinsics:=false add_plug:=false use_mesh:=false">
 
     <xacro:sensor_d435 name="${name}" parent="${parent}" use_nominal_extrinsics="${use_nominal_extrinsics}" add_plug="${add_plug}" use_mesh="${use_mesh}">
       <xacro:insert_block name="origin" />
