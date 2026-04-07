@@ -2,6 +2,11 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Temporary fix for realsense mesh
+* Contributors: Aina
+
 2.6.0 (2026-03-30)
 ------------------
 * Port realsense D435 and D455 to new Gazebo
