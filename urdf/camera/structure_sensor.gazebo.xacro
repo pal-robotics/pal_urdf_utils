@@ -61,14 +61,14 @@
               <max_depth>10.0</max_depth>
               <ros>
                 <namespace>${namespace}</namespace>
-                <remapping>${name}/image_raw:=${name}/ir/image_raw</remapping>
+                <remapping>${name}/image_raw:=${name}/ir/image</remapping>
                 <remapping>${name}/camera_info:=${name}/ir/camera_info</remapping>
-                <remapping>${name}/image_raw/compressed:=${name}/ir/image_raw/compressed</remapping>
-                <remapping>${name}/image_raw/compressedDepth:=${name}/ir/image_raw/compressedDepth</remapping>
-                <remapping>${name}/image_raw/theora:=${name}/ir/image_raw/theora</remapping>
+                <remapping>${name}/image_raw/compressed:=${name}/ir/image/compressed</remapping>
+                <remapping>${name}/image_raw/compressedDepth:=${name}/ir/image/compressedDepth</remapping>
+                <remapping>${name}/image_raw/theora:=${name}/ir/image/theora</remapping>
                 <remapping>${name}/points:=${name}/depth/points</remapping>
                 <qos>
-                  <topic name="${name}/ir/image_raw">
+                  <topic name="${name}/ir/image">
                     <publisher>
                       <reliability>best_effort</reliability>
                       <durability>volatile</durability>
@@ -76,7 +76,7 @@
                       <liveliness>automatic</liveliness>
                     </publisher>
                   </topic>
-                  <topic name="${name}/ir/image_raw/compressed">
+                  <topic name="${name}/ir/image/compressed">
                     <publisher>
                       <reliability>best_effort</reliability>
                       <durability>volatile</durability>
@@ -84,7 +84,7 @@
                       <liveliness>automatic</liveliness>
                     </publisher>
                   </topic>
-                  <topic name="${name}/ir/image_raw/compressedDepth">
+                  <topic name="${name}/ir/image/compressedDepth">
                     <publisher>
                       <reliability>best_effort</reliability>
                       <durability>volatile</durability>
