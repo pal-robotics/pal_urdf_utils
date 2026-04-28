@@ -2,6 +2,11 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix dependencies on realsense2
+* Contributors: Aina
+
 2.6.1 (2026-04-07)
 ------------------
 * Temporary fix for realsense mesh
