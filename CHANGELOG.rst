@@ -2,8 +2,8 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.6.2 (2026-04-28)
+------------------
 * Fix dependencies on realsense2
 * Contributors: Aina
 
