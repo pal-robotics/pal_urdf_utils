@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- 
+<!--
   Copyright (c) 2025 PAL Robotics S.L. All rights reserved.
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:include filename="$(find pal_urdf_utils)/urdf/deg_to_rad.urdf.xacro" />
-  
+
   <xacro:macro name="realsense_d435_rgbd_camera_gazebo" params="name" >
 
     <xacro:if value="${gazebo_version == 'classic'}">
