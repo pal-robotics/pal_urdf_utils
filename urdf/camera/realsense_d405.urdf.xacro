@@ -22,7 +22,7 @@
   <!-- Macro -->
   <xacro:macro name="realsense_d405" params="parent *origin name:=camera use_nominal_extrinsics:=false add_plug:=false use_mesh:=false">
 
-    <xacro:sensor_d405 name="${name}" parent="${parent}" use_nominal_extrinsics="${use_nominal_extrinsics}" add_plug="${add_plug}" use_mesh="${use_mesh}">
+    <xacro:sensor_d405 name="${name}" parent="${parent}" use_nominal_extrinsics="${use_nominal_extrinsics}">
       <xacro:insert_block name="origin" />
     </xacro:sensor_d405>
 
