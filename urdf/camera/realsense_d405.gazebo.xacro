@@ -178,6 +178,7 @@
               </clip>
             </depth_camera>
           </camera>
+        </sensor>
         </xacro:if>
     </gazebo>
 
