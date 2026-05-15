@@ -2,6 +2,11 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Uniformed simulation topics' names to the real robot ones
+* Contributors: martinaannicelli
+
 2.6.2 (2026-04-28)
 ------------------
 * Fix dependencies on realsense2
