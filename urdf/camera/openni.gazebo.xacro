@@ -63,9 +63,12 @@
               <!-- <namespace>${name}</namespace>-->
               <remapping>${name}/image_raw:=${name}/rgb/image_raw</remapping>
               <remapping>${name}/camera_info:=${name}/rgb/camera_info</remapping>
+              <remapping>${name}/image_raw/compressed:=${name}/rgb/image_raw/compressed</remapping>
+              <remapping>${name}/image_raw/compressedDepth:=${name}/rgb/image_raw/compressedDepth</remapping>
+              <remapping>${name}/image_raw/theora:=${name}/rgb/image_raw/theora</remapping>
               <remapping>${name}/depth/image_raw:=${name}/depth/image_raw</remapping>
               <remapping>${name}/depth/camera_info:=${name}/depth/camera_info</remapping>
-              <remapping>${name}/points:=${name}/depth/points</remapping>
+              <remapping>${name}/points:=${name}/depth/rgb/points</remapping>
             </ros>
             <frame_name>${name}_color_optical_frame</frame_name>
             <min_depth>0.3</min_depth>
