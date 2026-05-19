@@ -44,6 +44,17 @@
           <depthImageTopicName>depth/image_raw</depthImageTopicName>
           <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
           <pointCloudTopicName>depth/points</pointCloudTopicName>
+          <ros>
+            <!-- <namespace>${name}</namespace>-->
+            <remapping>${name}/image_raw:=${name}/rgb/image_raw</remapping>
+            <remapping>${name}/camera_info:=${name}/rgb/camera_info</remapping>
+            <remapping>${name}/image_raw/compressed:=${name}/rgb/image_raw/compressed</remapping>
+            <remapping>${name}/image_raw/compressedDepth:=${name}/rgb/image_raw/compressedDepth</remapping>
+            <remapping>${name}/image_raw/theora:=${name}/rgb/image_raw/theora</remapping>
+            <remapping>${name}/depth/image_raw:=${name}/depth/image_raw</remapping>
+            <remapping>${name}/depth/camera_info:=${name}/depth/camera_info</remapping>
+            <remapping>${name}/points:=${name}/depth/rgb/points</remapping>
+          </ros>
           <frameName>${name}_optical_frame</frameName>
           <pointCloudCutoff>0.45</pointCloudCutoff>
           <rangeMax>10.0</rangeMax>
