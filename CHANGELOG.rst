@@ -2,6 +2,11 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* uniform robot and simulation camera topics names
+* Contributors: martinaannicelli
+
 2.7.0 (2026-05-15)
 ------------------
 * Uniformed simulation topics' names to the real robot ones
