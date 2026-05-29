@@ -2,8 +2,8 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.8.0 (2026-05-29)
+------------------
 * added airy96 lidar
 * added robosense e1r
 * Contributors: Andrea Capodacqua, andreacapodacqua
