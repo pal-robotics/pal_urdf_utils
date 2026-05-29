@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!-- 
+  Copyright (c) 2026 PAL Robotics S.L. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ -->
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="robosense_e1r_lidar" params="name parent *origin">
+
+    <link name="${name}_link" type="lidar">
+      <inertial>
+        <origin xyz="-0.02559000000 -0.00056000000 -0.05732000000" rpy="0 0 0"/>
+        <mass value="0.28922000000"/>
+        <inertia ixx="0.00002628919" ixy="0.00000024298" ixz="-0.00000368129" iyy="0.00003374542" iyz="-0.00000001330" izz="0.00005832599"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="1.57 0 -1.57" />
+        <geometry>
+          <mesh filename="package://pal_urdf_utils/meshes/lidar/robosense_e1r.stl"/>
+        </geometry>
+        <material name="DarkGrey"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="1.57 0 -1.57" />
+        <geometry>
+          <mesh filename="package://pal_urdf_utils/meshes/lidar/robosense_e1r.stl"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${name}_joint" type="fixed">
+      <xacro:insert_block name="origin"/>
+      <parent link="${parent}"/>
+      <child link="${name}_link"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>
