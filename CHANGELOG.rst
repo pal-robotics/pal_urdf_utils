@@ -2,6 +2,12 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* added airy96 lidar
+* added robosense e1r
+* Contributors: Andrea Capodacqua, andreacapodacqua
+
 2.7.1 (2026-05-19)
 ------------------
 * uniform robot and simulation camera topics names
