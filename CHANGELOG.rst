@@ -2,6 +2,15 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* sick picoscan150core
+* added picoscan mesh
+* renamed to picoscan150core
+* mesh visualization
+* added sick picoscan
+* Contributors: Andrea Capodacqua, andreacapodacqua
+
 2.8.0 (2026-05-29)
 ------------------
 * added airy96 lidar
