@@ -2,8 +2,8 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.9.0 (2026-06-03)
+------------------
 * sick picoscan150core
 * added picoscan mesh
 * renamed to picoscan150core
