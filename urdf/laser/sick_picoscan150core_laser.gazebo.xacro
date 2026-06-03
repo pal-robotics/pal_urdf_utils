@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!-- 
+  Copyright (c) 2026 PAL Robotics S.L. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ -->
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="sick_picoscan150core_laser_gazebo" params="name ros_topic update_rate min_angle max_angle">
+
+    <gazebo reference="${name}_link">
+      <sensor name="${name}" type="gpu_lidar">
+        <update_rate>${update_rate}</update_rate>
+        <topic>${ros_topic}</topic>
+        <gz_frame_id>${name}_link</gz_frame_id>
+        <visualize>true</visualize>
+        <always_on>true</always_on>
+        <ray>
+          <scan>
+            <horizontal>
+              <!-- 1104 (276/0.25) steps in 276 deg fov -->
+              <samples>${1104*(max_angle - min_angle)/(276.0 * deg_to_rad)}</samples>
+              <resolution>1</resolution>              <!-- not the sensor resolution; just 1 -->
+              <min_angle>${min_angle + deg_to_rad}</min_angle> <!--there is a laserscan detecting ghost obstacle-->
+              <max_angle>${max_angle}</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.05</min>
+            <max>25.0</max>
+            <resolution>0.25</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+        <xacro:if value="${gazebo_version == 'classic'}">
+          <plugin name="${name}" filename="libgazebo_ros_ray_sensor.so">
+            <ros>
+              <namespace>${namespace}</namespace>
+              <remapping>~/out:=${ros_topic}</remapping>
+            </ros>
+            <output_type>sensor_msgs/LaserScan</output_type>
+            <frame_name>${name}_link</frame_name>
+          </plugin>
+        </xacro:if>
+      </sensor>
+      <material>Gazebo/DarkGrey</material>
+    </gazebo>
+
+    <gazebo reference="${name}_imu_link">
+      <sensor name="${name}_imu_sensor" type="imu">
+        <always_on>1</always_on>
+        <update_rate>100</update_rate>
+        <topic>${ros_topic}/imu</topic>
+        <imu>
+          <noise>
+            <type>gaussian</type>
+            <rate>
+              <mean>0.0</mean>
+              <stddev>2e-4</stddev>
+              <bias_mean>0.0000075</bias_mean>
+              <bias_stddev>0.0000008</bias_stddev>
+            </rate>
+            <accel>
+              <mean>0.0</mean>
+              <stddev>1.7e-2</stddev>
+              <bias_mean>0.1</bias_mean>
+              <bias_stddev>0.001</bias_stddev>
+            </accel>
+          </noise>
+        </imu>
+        <xacro:if value="${gazebo_version == 'classic'}">
+          <plugin name="${name}_imu_sensor" filename="libgazebo_ros_imu_sensor.so">
+            <ros>
+              <namespace>${namespace}</namespace>
+              <!-- publish to /imu/data -->
+              <remapping>~/out:=${ros_topic}/imu</remapping>
+            </ros>
+          </plugin>
+        </xacro:if>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>
