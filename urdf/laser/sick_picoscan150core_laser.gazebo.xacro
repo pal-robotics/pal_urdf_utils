@@ -16,13 +16,13 @@
  -->
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:macro name="sick_picoscan_laser_gazebo" params="name ros_topic update_rate min_angle max_angle">
+  <xacro:macro name="sick_picoscan150core_laser_gazebo" params="name ros_topic update_rate min_angle max_angle">
 
-    <gazebo reference="${name}_link_1">
+    <gazebo reference="${name}_link">
       <sensor name="${name}" type="gpu_lidar">
         <update_rate>${update_rate}</update_rate>
         <topic>${ros_topic}</topic>
-        <gz_frame_id>${name}_link_1</gz_frame_id>
+        <gz_frame_id>${name}_link</gz_frame_id>
         <visualize>true</visualize>
         <always_on>true</always_on>
         <ray>
@@ -53,14 +53,14 @@
               <remapping>~/out:=${ros_topic}</remapping>
             </ros>
             <output_type>sensor_msgs/LaserScan</output_type>
-            <frame_name>${name}_link_1</frame_name>
+            <frame_name>${name}_link</frame_name>
           </plugin>
         </xacro:if>
       </sensor>
       <material>Gazebo/DarkGrey</material>
     </gazebo>
 
-    <gazebo reference="${name}_imu_link_1">
+    <gazebo reference="${name}_imu_link">
       <sensor name="${name}_imu_sensor" type="imu">
         <always_on>1</always_on>
         <update_rate>100</update_rate>
