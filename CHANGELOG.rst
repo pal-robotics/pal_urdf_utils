@@ -2,6 +2,11 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix/aca/imu warning
+* Contributors: andreacapodacqua
+
 2.9.0 (2026-06-03)
 ------------------
 * sick picoscan150core
