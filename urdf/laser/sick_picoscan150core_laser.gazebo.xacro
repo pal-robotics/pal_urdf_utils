@@ -89,6 +89,7 @@
               <!-- publish to /imu/data -->
               <remapping>~/out:=${ros_topic}/imu</remapping>
             </ros>
+            <initial_orientation_as_reference>false</initial_orientation_as_reference>
           </plugin>
         </xacro:if>
       </sensor>
