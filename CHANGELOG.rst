@@ -2,8 +2,8 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.9.1 (2026-06-15)
+------------------
 * Fix/aca/imu warning
 * Contributors: andreacapodacqua
 
