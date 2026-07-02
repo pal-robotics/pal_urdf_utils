@@ -21,6 +21,10 @@
   <xacro:macro name="ros2_control_force_torque_sensor" params="name">
 
     <sensor name="${name}">
+      <!-- MuJoCo ROS 2 Control specific tags-->
+      <param name="mujoco_type">fts</param>
+      <param name="mujoco_sensor_name">${name}</param>
+
       <state_interface name="force.x"/>
       <state_interface name="force.y"/>
       <state_interface name="force.z"/>
