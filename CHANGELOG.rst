@@ -2,6 +2,14 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'add/ft_sensor/mujoco_tags' into 'humble-devel'
+  Add mujoco specific tags to the ft_sensor ros2_control config
+  See merge request robots/pal_urdf_utils!45
+* Add mujoco specific tags to the ft_sensor ros2_control config
+* Contributors: Sai Kishor Kothakota
+
 2.9.1 (2026-06-15)
 ------------------
 * Fix/aca/imu warning
