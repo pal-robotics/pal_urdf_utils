@@ -19,7 +19,7 @@
 
   <xacro:include filename="$(find pal_urdf_utils)/urdf/deg_to_rad.urdf.xacro" />
 
-  <xacro:macro name="realsense_d435_rgbd_camera_gazebo" params="name" >
+  <xacro:macro name="realsense_d405_rgbd_camera_gazebo" params="name" >
 
     <xacro:if value="${gazebo_version == 'classic'}">
       <xacro:property name="camera_type" value="depth"/>
@@ -28,25 +28,22 @@
       <xacro:property name="camera_type" value="camera"/>
     </xacro:if>
 
+
     <gazebo reference="${name}_link">
       <sensor name="${name}" type="${camera_type}">
-        <always_on>1</always_on>
+        <always_on>true</always_on>
         <gz_frame_id>${name}_color_optical_frame</gz_frame_id>
-        <update_rate>30.0</update_rate>
-        <visualize>1</visualize>
+        <update_rate>30</update_rate>
+        <visualize>true</visualize>
         <topic>${name}/color</topic>
         <camera name="${name}">
-          <horizontal_fov>${85.2*deg_to_rad}</horizontal_fov>
+          <horizontal_fov>${87*deg_to_rad}</horizontal_fov>
           <vertical_fov>${58.0*deg_to_rad}</vertical_fov>
           <image>
+            <format>B8G8R8</format>
             <width>640</width>
             <height>480</height>
-            <format>B8G8R8</format>
           </image>
-          <clip>
-            <near>0.1</near>
-            <far>10.0</far>
-          </clip>
         </camera>
         <xacro:if value="${gazebo_version == 'classic'}">
           <plugin name="${name}" filename="libgazebo_ros_camera.so">
@@ -167,7 +164,7 @@
           <visualize>1</visualize>
           <topic>${name}/depth</topic>
           <camera name="rgbd_camera_frame">
-            <horizontal_fov>${85.2*deg_to_rad}</horizontal_fov>
+            <horizontal_fov>${87*deg_to_rad}</horizontal_fov>
             <vertical_fov>${58.0*deg_to_rad}</vertical_fov>
             <image>
               <width>640</width>
@@ -176,13 +173,13 @@
             </image>
             <depth_camera>
               <clip>
-                <near>0.3</near>
-                <far>3.0</far>
+                <near>0.07</near>
+                <far>0.5</far>
               </clip>
             </depth_camera>
           </camera>
         </sensor>
-      </xacro:if>
+        </xacro:if>
     </gazebo>
 
   </xacro:macro>

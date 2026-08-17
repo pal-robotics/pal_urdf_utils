@@ -17,18 +17,19 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:property name="realsense_materials_defined" value="true" />
-  <xacro:include filename="$(find realsense2_description)/urdf/_d435i.urdf.xacro"/>
-  <xacro:include filename="$(find pal_urdf_utils)/urdf/camera/realsense_d435i.gazebo.xacro" />
+  <xacro:include filename="$(find realsense2_description)/urdf/_d405.urdf.xacro"/>
+  <xacro:include filename="$(find pal_urdf_utils)/urdf/camera/realsense_d405.gazebo.xacro" />
 
   <!-- Macro -->
-  <xacro:macro name="realsense_d435i" params="parent *origin name:=camera use_nominal_extrinsics:=false">
+  <xacro:macro name="realsense_d405" params="parent *origin name:=camera use_nominal_extrinsics:=false add_plug:=false use_mesh:=false">
 
-    <xacro:sensor_d435i name="${name}" parent="${parent}" use_nominal_extrinsics="${use_nominal_extrinsics}">
+    <xacro:property name="add_plug" value="${add_plug}" />
+    <xacro:sensor_d405 name="${name}" parent="${parent}" use_nominal_extrinsics="${use_nominal_extrinsics}">
       <xacro:insert_block name="origin" />
-    </xacro:sensor_d435i>
+    </xacro:sensor_d405>
 
     <!-- extensions -->
-    <xacro:realsense_d435i_rgbd_camera_gazebo name="${name}" />
+    <xacro:realsense_d405_rgbd_camera_gazebo name="${name}" />
 
   </xacro:macro>
 
