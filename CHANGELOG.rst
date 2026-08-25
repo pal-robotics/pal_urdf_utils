@@ -2,8 +2,8 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.10.0 (2026-08-25)
+-------------------
 * use materials defined in pal_urdf_utils for camera
 * remove extra parameters not needed
 * fix close sensor tag
