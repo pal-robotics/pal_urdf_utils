@@ -2,6 +2,15 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* use materials defined in pal_urdf_utils for camera
+* remove extra parameters not needed
+* fix close sensor tag
+* add compatibility with new gazebo
+* added description of realsense_d405
+* Contributors: Ortisa Poci
+
 2.9.2 (2026-07-03)
 ------------------
 * Merge branch 'add/ft_sensor/mujoco_tags' into 'humble-devel'
