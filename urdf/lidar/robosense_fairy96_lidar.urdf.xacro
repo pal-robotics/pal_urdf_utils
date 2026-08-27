@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!--
+  Copyright (c) 2026 PAL Robotics S.L. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ -->
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find pal_urdf_utils)/urdf/lidar/robosense_fairy96_lidar.gazebo.xacro" />
+
+  <!--
+    RoboSense Fairy, 96-beam mid-range spinning digital LiDAR.
+
+    NOTE ON GEOMETRY: there is no Fairy mesh in pal_urdf_utils, so the body is a
+    plain cylinder built to the datasheet envelope, phi75 x H70 mm. The link
+    origin sits on the mounting face at the bottom of the can, with +Z the spin
+    axis.
+
+    WHEN SWAPPING IN A REAL MESH, CHECK IT DOES NOT SIT IN FRONT OF THE RAY
+    ORIGIN. gpu_lidar renders the visual scene, so a housing between the origin
+    and the world is opaque to its own sensor: hits land under min_range and are
+    dropped, silently blanking that part of the FoV. That is exactly what
+    happened to the Airy, where the mesh spanned 0..+63 mm along the dome axis
+    and destroyed 55% of all returns (56962 -> 25403) including 100% of the
+    forward cone. The placeholder cylinder here is safe because the ray origin
+    lies inside it, where backfaces are culled; verified by measurement, a
+    138240-ray scan returns 106606 points with and without the body, delta zero.
+    A real STL whose origin is the mounting face, as the Airy's is, would NOT be
+    safe: offset it so the body stays behind the ray origin.
+
+    The inertial is likewise derived rather than measured: a uniform cylinder of
+    350 g (the datasheet gives only "<350 g"), so the tensor is an estimate.
+    Pass a corrected one via the mass/inertia arguments if you have real values.
+
+    Set v_samples:=48 for the 48-beam variant, which shares the same 32 deg
+    vertical span at half the beam count.
+   -->
+  <xacro:macro name="robosense_fairy96_lidar"
+               params="name parent *origin topic_ns:=lidar update_rate:=10
+                       h_samples:=1440 v_samples:=96 mass:=0.35">
+
+    <xacro:property name="fairy_radius" value="0.0375"/>
+    <xacro:property name="fairy_height" value="0.070"/>
+
+    <link name="${name}_link" type="lidar">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <inertia ixx="${(1.0/12.0) * mass * (3.0 * fairy_radius * fairy_radius + fairy_height * fairy_height)}"
+                 ixy="0.0" ixz="0.0"
+                 iyy="${(1.0/12.0) * mass * (3.0 * fairy_radius * fairy_radius + fairy_height * fairy_height)}"
+                 iyz="0.0"
+                 izz="${0.5 * mass * fairy_radius * fairy_radius}"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <cylinder radius="${fairy_radius}" length="${fairy_height}"/>
+        </geometry>
+        <material name="DarkGrey"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <cylinder radius="${fairy_radius}" length="${fairy_height}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${name}_joint" type="fixed">
+      <xacro:insert_block name="origin"/>
+      <parent link="${parent}"/>
+      <child link="${name}_link"/>
+    </joint>
+
+    <!-- The Fairy96 has the IMU chip aligned with the LiDAR frame axes (x fwd, y left, z up): no permutation needed.. -->
+    <link name="${name}_imu_link" type="imu"/>
+
+    <joint name="${name}_imu_joint" type="fixed">
+      <parent link="${name}_link"/>
+      <child link="${name}_imu_link"/>
+      <origin xyz="0.01365 0.00782 0.00492" rpy="0 0 0"/>
+    </joint>
+
+    <!-- gazebo extensions -->
+    <xacro:robosense_fairy96_lidar_gazebo name="${name}" topic_ns="${topic_ns}"
+                                          update_rate="${update_rate}"
+                                          h_samples="${h_samples}" v_samples="${v_samples}"/>
+
+  </xacro:macro>
+
+</robot>

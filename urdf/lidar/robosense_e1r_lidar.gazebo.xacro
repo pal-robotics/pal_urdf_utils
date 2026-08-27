@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<!--
+  Copyright (c) 2026 PAL Robotics S.L. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ -->
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find pal_urdf_utils)/urdf/deg_to_rad.urdf.xacro" />
+
+  <!--
+    RoboSense E1R, 144-beam solid-state (flash) LiDAR.
+
+    Datasheet figures reproduced by the defaults below:
+      beams              144
+      horizontal FoV     120 deg @ 0.625 deg  -> 192 samples
+      vertical FoV        90 deg @ 0.625 deg  -> 144 samples
+      frame rate         10 Hz
+      range              <0.1 m .. 75 m (30 m @ 10% reflectivity)
+      accuracy           +/-3 cm
+      point rate         260000 pts/s single echo (520000 dual)
+      wavelength         940 nm
+
+    Frame convention: unlike the hemispherical Airy, the E1R is a forward
+    looking frustum. +X of ${name}_link is the optical axis, pointing out of
+    the window, and the FoV is centred on it: horizontal +/-60 deg about +Z,
+    vertical +/-45 deg. This matches the mesh, whose extent along the link Y
+    axis is exactly the datasheet's 95 mm width.
+
+    Departures from the real sensor:
+      - the vertical FoV is assumed SYMMETRIC (-45..+45). RoboSense publishes
+        the 90 deg span but not its distribution about the optical axis; if the
+        datasheet turns out to specify an offset, pass v_min_angle/v_max_angle
+        rather than editing this file.
+      - dual-echo returns are not modelled, only the single-echo cloud.
+      - the real device is a flash sensor firing the whole frame at once, which
+        the single instantaneous SDF scan actually reproduces quite well (better
+        than for a spinning lidar).
+
+    Unlike the Airy's 360x90 dome, this 120x90 frustum is narrow enough that
+    Gazebo Classic's GpuRaySensor can render it; see the note below.
+  -->
+  <xacro:macro name="robosense_e1r_lidar_gazebo"
+               params="name topic_ns:=lidar update_rate:=10
+                       h_samples:=192 v_samples:=144
+                       h_min_angle:=${-60.0 * deg_to_rad}
+                       h_max_angle:=${60.0 * deg_to_rad}
+                       v_min_angle:=${-45.0 * deg_to_rad}
+                       v_max_angle:=${45.0 * deg_to_rad}
+                       min_range:=0.1 max_range:=75.0
+                       visualize:=0">
+
+    <gazebo reference="${name}_link">
+      <sensor name="${name}" type="gpu_lidar">
+        <update_rate>${update_rate}</update_rate>
+        <!-- gz publishes LaserScan on <topic> and PointCloudPacked on <topic>/points -->
+        <topic>${topic_ns}</topic>
+        <gz_frame_id>${name}_link</gz_frame_id>
+        <visualize>${visualize}</visualize>
+        <always_on>true</always_on>
+        <ray>
+          <scan>
+            <horizontal>
+              <!-- 192 (120/0.625) steps in 120 deg fov -->
+              <samples>${h_samples}</samples>
+              <resolution>1</resolution>              <!-- not the sensor resolution; just 1 -->
+              <min_angle>${h_min_angle}</min_angle>
+              <max_angle>${h_max_angle}</max_angle>
+            </horizontal>
+            <vertical>
+              <!-- 144 (90/0.625) steps in 90 deg fov -->
+              <samples>${v_samples}</samples>
+              <resolution>1</resolution>              <!-- not the sensor resolution; just 1 -->
+              <min_angle>${v_min_angle}</min_angle>
+              <max_angle>${v_max_angle}</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>${min_range}</min>
+            <max>${max_range}</max>
+            <resolution>0.01</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>           <!-- +/-3 cm accuracy taken as ~3 sigma -->
+          </noise>
+        </ray>
+        <xacro:if value="${gazebo_version == 'classic'}">
+          <plugin name="${name}" filename="libgazebo_ros_ray_sensor.so">
+            <ros>
+              <namespace>${namespace}</namespace>
+              <remapping>~/out:=${topic_ns}/points</remapping>
+            </ros>
+            <output_type>sensor_msgs/PointCloud2</output_type>
+            <frame_name>${name}_link</frame_name>
+          </plugin>
+        </xacro:if>
+      </sensor>
+      <material>Gazebo/DarkGrey</material>
+    </gazebo>
+
+    <gazebo reference="${name}_imu_link">
+      <sensor name="${name}_imu_sensor" type="imu">
+        <always_on>1</always_on>
+        <update_rate>50</update_rate>
+        <topic>${topic_ns}/imu</topic>
+        <gz_frame_id>${name}_imu_link</gz_frame_id>
+        <imu>
+          <noise>
+            <type>gaussian</type>
+            <rate>
+              <mean>0.0</mean>
+              <stddev>8.2e-4</stddev>
+              <bias_mean>3.6e-3</bias_mean>
+              <bias_stddev>1.0e-3</bias_stddev>
+            </rate>
+            <accel>
+              <mean>0.0</mean>
+              <stddev>1.7e-2</stddev>
+              <bias_mean>0.03</bias_mean>
+              <bias_stddev>0.01</bias_stddev>
+            </accel>
+          </noise>
+        </imu>
+        <xacro:if value="${gazebo_version == 'classic'}">
+          <plugin name="${name}_imu_sensor" filename="libgazebo_ros_imu_sensor.so">
+            <ros>
+              <namespace>${namespace}</namespace>
+              <remapping>~/out:=${topic_ns}/imu</remapping>
+            </ros>
+            <frame_name>${name}_imu_link</frame_name>
+            <initial_orientation_as_reference>false</initial_orientation_as_reference>
+          </plugin>
+        </xacro:if>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>

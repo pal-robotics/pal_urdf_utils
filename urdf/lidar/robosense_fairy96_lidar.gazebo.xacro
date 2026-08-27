@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<!--
+  Copyright (c) 2026 PAL Robotics S.L. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ -->
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find pal_urdf_utils)/urdf/deg_to_rad.urdf.xacro" />
+
+  <!--
+    RoboSense Fairy, 96-beam mid-range spinning digital LiDAR.
+
+    Datasheet figures reproduced by the defaults below:
+      beams              96 (48-beam variant: pass v_samples:=48)
+      horizontal FoV     360 deg @ 0.25 deg  -> 1440 samples
+      vertical FoV       32 deg @ 0.33 deg   -> 96 samples
+      frame rate         10 Hz
+      max range          150 m
+      ranging accuracy   0.5 cm @ 1 sigma
+      point rate         ~1370000 pts/s (96-beam), ~685000 (48-beam)
+      integrated IMU     yes
+
+    The frame rate is not published directly but follows from the point rate:
+    1440 x 96 x 10 Hz = 1382400 pts/s, matching the quoted ~1.37M; the 48-beam
+    figure checks out the same way (1440 x 48 x 10 = 691200 vs ~685000).
+
+    Frame convention: a flat-mounted spinner, so +Z of ${name}_link is the spin
+    axis and the vertical fan is centred on the link's XY plane. The rays
+    originate at the link origin, i.e. on the mounting face; the ~35 mm offset
+    up to the real optical centre inside the can is not modelled. Putting a
+    <pose> on the <sensor> does not help, as the URDF->SDF conversion overwrites
+    it with the link transform; it would need its own child link.
+
+    Departures from the real sensor:
+      - the vertical FoV is assumed SYMMETRIC (-16..+16). RoboSense publishes the
+        32 deg span but not its distribution about the horizontal plane; pass
+        v_min_angle/v_max_angle rather than editing this file if it is offset.
+      - min_range is NOT published. 0.5 m is taken from the lower bound of the
+        window the accuracy spec is quoted over (0.5-70 m), which is an
+        inference, not a stated blind zone. Override via min_range.
+      - max_range is the 150 m headline figure; RoboSense does not separate a
+        10%-reflectivity figure from it, so no reflectivity derating is modelled.
+      - the real device sweeps continuously, while the simulated scan is taken
+        as a single instantaneous snapshot per frame.
+
+    Unlike the Airy's 360x90 dome, the Fairy's 32 deg vertical fan is well inside
+    what Gazebo Classic's GpuRaySensor can render, so this sensor works on both
+    backends.
+
+    A 96-beam Fairy is 1440x96 = 138240 rays per frame, noticeably heavier than
+    the Airy's 86400; lower h_samples/v_samples if the simulation cannot keep up.
+  -->
+  <xacro:macro name="robosense_fairy96_lidar_gazebo"
+               params="name topic_ns:=lidar update_rate:=10
+                       h_samples:=1440 v_samples:=96
+                       v_min_angle:=${-16.0 * deg_to_rad}
+                       v_max_angle:=${16.0 * deg_to_rad}
+                       min_range:=0.5 max_range:=150.0
+                       visualize:=0">
+
+    <gazebo reference="${name}_link">
+      <sensor name="${name}" type="gpu_lidar">
+        <update_rate>${update_rate}</update_rate>
+        <!-- gz publishes LaserScan on <topic> and PointCloudPacked on <topic>/points -->
+        <topic>${topic_ns}</topic>
+        <gz_frame_id>${name}_link</gz_frame_id>
+        <visualize>${visualize}</visualize>
+        <always_on>true</always_on>
+        <ray>
+          <scan>
+            <horizontal>
+              <!-- 1440 (360/0.25) steps in 360 deg fov -->
+              <samples>${h_samples}</samples>
+              <resolution>1</resolution>              <!-- not the sensor resolution; just 1 -->
+              <min_angle>${-180.0 * deg_to_rad}</min_angle>
+              <max_angle>${180.0 * deg_to_rad}</max_angle>
+            </horizontal>
+            <vertical>
+              <!-- 96 (32/0.33) steps in 32 deg fov -->
+              <samples>${v_samples}</samples>
+              <resolution>1</resolution>              <!-- not the sensor resolution; just 1 -->
+              <min_angle>${v_min_angle}</min_angle>
+              <max_angle>${v_max_angle}</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>${min_range}</min>
+            <max>${max_range}</max>
+            <resolution>0.005</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.005</stddev>          <!-- 0.5 cm @ 1 sigma -->
+          </noise>
+        </ray>
+        <xacro:if value="${gazebo_version == 'classic'}">
+          <plugin name="${name}" filename="libgazebo_ros_ray_sensor.so">
+            <ros>
+              <namespace>${namespace}</namespace>
+              <remapping>~/out:=${topic_ns}/points</remapping>
+            </ros>
+            <output_type>sensor_msgs/PointCloud2</output_type>
+            <frame_name>${name}_link</frame_name>
+          </plugin>
+        </xacro:if>
+      </sensor>
+      <material>Gazebo/DarkGrey</material>
+    </gazebo>
+
+    <gazebo reference="${name}_imu_link">
+      <sensor name="${name}_imu_sensor" type="imu">
+        <always_on>1</always_on>
+        <update_rate>200</update_rate>
+        <topic>${topic_ns}/imu</topic>
+        <gz_frame_id>${name}_imu_link</gz_frame_id>
+        <imu>
+          <noise>
+            <type>gaussian</type>
+            <rate>
+              <mean>0.0</mean>
+              <stddev>8.2e-4</stddev>
+              <bias_mean>3.6e-3</bias_mean>
+              <bias_stddev>1.0e-3</bias_stddev>
+            </rate>
+            <accel>
+              <mean>0.0</mean>
+              <stddev>1.7e-2</stddev>
+              <bias_mean>0.03</bias_mean>
+              <bias_stddev>0.01</bias_stddev>
+            </accel>
+          </noise>
+        </imu>
+        <xacro:if value="${gazebo_version == 'classic'}">
+          <plugin name="${name}_imu_sensor" filename="libgazebo_ros_imu_sensor.so">
+            <ros>
+              <namespace>${namespace}</namespace>
+              <remapping>~/out:=${topic_ns}/imu</remapping>
+            </ros>
+            <frame_name>${name}_imu_link</frame_name>
+            <initial_orientation_as_reference>false</initial_orientation_as_reference>
+          </plugin>
+        </xacro:if>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>

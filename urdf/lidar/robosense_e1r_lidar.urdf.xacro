@@ -16,7 +16,9 @@
  -->
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:macro name="robosense_e1r_lidar" params="name parent *origin">
+  <xacro:include filename="$(find pal_urdf_utils)/urdf/lidar/robosense_e1r_lidar.gazebo.xacro" />
+
+  <xacro:macro name="robosense_e1r_lidar" params="name parent *origin topic_ns:=lidar update_rate:=10 h_samples:=192 v_samples:=144">
 
     <link name="${name}_link" type="lidar">
       <inertial>
@@ -44,6 +46,28 @@
       <parent link="${parent}"/>
       <child link="${name}_link"/>
     </joint>
+
+    <!-- Frame of the E1R's internal IMU.
+         The driver publishes sensor_msgs/Imu in the sensor's native axes,
+         which are NOT the ROS-convention axes of ${name}_link:
+             x_imu = -y_link (right)
+             y_imu = +z_link (up)
+             z_imu = -x_link (backward)-->
+    <link name="${name}_imu_link"/>
+
+    <joint name="${name}_imu_joint" type="fixed">
+      <!-- TODO xyz: offset of the IMU chip from the optical origin, from the
+           E1R datasheet. Negligible for 2D, matters for centripetal terms
+           during in-place rotation. -->
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 -1.5707963267948966"/>
+      <parent link="${name}_link"/>
+      <child link="${name}_imu_link"/>
+    </joint>
+
+    <!-- gazebo extensions -->
+    <xacro:robosense_e1r_lidar_gazebo name="${name}" topic_ns="${topic_ns}"
+                                      update_rate="${update_rate}"
+                                      h_samples="${h_samples}" v_samples="${v_samples}"/>
 
   </xacro:macro>
 
