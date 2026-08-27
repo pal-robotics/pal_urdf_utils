@@ -2,6 +2,11 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Bump CmakeList to 3.10
+* Contributors: Aina
+
 2.10.0 (2026-08-25)
 -------------------
 * use materials defined in pal_urdf_utils for camera
