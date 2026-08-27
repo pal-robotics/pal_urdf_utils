@@ -2,8 +2,8 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.10.1 (2026-08-27)
+-------------------
 * Bump CmakeList to 3.10
 * Contributors: Aina
 
