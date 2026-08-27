@@ -2,6 +2,11 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add robosense 3d lidar
+* Contributors: antoniobrandi
+
 2.10.1 (2026-08-27)
 -------------------
 * Bump CmakeList to 3.10
