@@ -16,7 +16,9 @@
  -->
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:macro name="robosense_airy96_lidar" params="name parent *origin">
+  <xacro:include filename="$(find pal_urdf_utils)/urdf/lidar/robosense_airy96_lidar.gazebo.xacro" />
+
+  <xacro:macro name="robosense_airy96_lidar" params="name parent *origin topic_ns:=lidar update_rate:=10 h_samples:=900 v_samples:=96">
 
     <link name="${name}_link" type="lidar">
       <inertial>
@@ -25,14 +27,14 @@
         <inertia ixx="0.00002628919" ixy="0.00000024298" ixz="-0.00000368129" iyy="0.00003374542" iyz="-0.00000001330" izz="0.00005832599"/>
       </inertial>
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0 0 -0.063" rpy="0 0 0" />
         <geometry>
           <mesh filename="package://pal_urdf_utils/meshes/lidar/robosense_airy96.stl"/>
         </geometry>
         <material name="DarkGrey"/>
       </visual>
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0 0 -0.063" rpy="0 0 0" />
         <geometry>
           <mesh filename="package://pal_urdf_utils/meshes/lidar/robosense_airy96.stl"/>
         </geometry>
@@ -44,6 +46,29 @@
       <parent link="${parent}"/>
       <child link="${name}_link"/>
     </joint>
+
+    <!-- Frame of the Airy's internal IMU.
+         The driver publishes sensor_msgs/Imu in the sensor's native axes,
+         which are NOT the ROS-convention axes of ${name}_link:
+             x_imu = -y_link
+             y_imu = -x_link
+             z_imu = -z_link -->
+    <link name="${name}_imu_link"/>
+
+    <joint name="${name}_imu_joint" type="fixed">
+       <!--xyz="0.00425 0.00418 -0.00446" offset of the IMU chip from the LiDAR origin, 
+           from the DIFOP IMU_CALIB_DATA translation. Negligible for 2D and irrelevant
+           if only the gyro is used; matters for centripetal terms during
+           in-place rotation when using the accelerometer. -->
+      <origin xyz="0.0 0.0 0.0" rpy="3.1415926535897931 0 -1.5707963267948966"/>
+      <parent link="${name}_link"/>
+      <child link="${name}_imu_link"/>
+    </joint>
+
+    <!-- gazebo extensions -->
+    <xacro:robosense_airy96_lidar_gazebo name="${name}" topic_ns="${topic_ns}"
+                                        update_rate="${update_rate}"
+                                        h_samples="${h_samples}" v_samples="${v_samples}"/>
 
   </xacro:macro>
 
