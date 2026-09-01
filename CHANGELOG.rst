@@ -2,6 +2,11 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* adde min and max angle in macro
+* Contributors: andreacapodacqua
+
 2.11.0 (2026-08-27)
 -------------------
 * add robosense 3d lidar
