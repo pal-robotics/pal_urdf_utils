@@ -66,6 +66,8 @@
                        h_samples:=1440 v_samples:=96
                        v_min_angle:=${-16.0 * deg_to_rad}
                        v_max_angle:=${16.0 * deg_to_rad}
+                       min_angle:=${-180.0 * deg_to_rad}
+                       max_angle:=${180.0 * deg_to_rad}
                        min_range:=0.5 max_range:=150.0
                        visualize:=0">
 
@@ -83,8 +85,8 @@
               <!-- 1440 (360/0.25) steps in 360 deg fov -->
               <samples>${h_samples}</samples>
               <resolution>1</resolution>              <!-- not the sensor resolution; just 1 -->
-              <min_angle>${-180.0 * deg_to_rad}</min_angle>
-              <max_angle>${180.0 * deg_to_rad}</max_angle>
+              <min_angle>${min_angle}</min_angle>
+              <max_angle>${max_angle}</max_angle>
             </horizontal>
             <vertical>
               <!-- 96 (32/0.33) steps in 32 deg fov -->

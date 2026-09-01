@@ -47,7 +47,9 @@
    -->
   <xacro:macro name="robosense_fairy96_lidar"
                params="name parent *origin topic_ns:=lidar update_rate:=10
-                       h_samples:=1440 v_samples:=96 mass:=0.35">
+                       h_samples:=1440 v_samples:=96 mass:=0.35
+                       min_angle:=${-180.0 * deg_to_rad}
+                       max_angle:=${180.0 * deg_to_rad}">
 
     <xacro:property name="fairy_radius" value="0.0375"/>
     <xacro:property name="fairy_height" value="0.070"/>
@@ -95,7 +97,9 @@
     <!-- gazebo extensions -->
     <xacro:robosense_fairy96_lidar_gazebo name="${name}" topic_ns="${topic_ns}"
                                           update_rate="${update_rate}"
-                                          h_samples="${h_samples}" v_samples="${v_samples}"/>
+                                          h_samples="${h_samples}" v_samples="${v_samples}"
+                                          min_angle="${min_angle}"
+                                          max_angle="${max_angle}"/>
 
   </xacro:macro>
 
