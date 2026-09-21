@@ -2,6 +2,13 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update realsense_d435i.urdf.xacro
+* add args in the macro to pass to realsense2_description files
+* add use_mesh and add_plug and set to False for d435i and d455
+* Contributors: ileniaperrella, martinaannicelli
+
 2.11.1 (2026-09-01)
 -------------------
 * adde min and max angle in macro
