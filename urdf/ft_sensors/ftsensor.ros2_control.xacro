@@ -18,12 +18,13 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <!-- MACRO DEFINITION -->
-  <xacro:macro name="ros2_control_force_torque_sensor" params="name">
+  <xacro:macro name="ros2_control_force_torque_sensor" params="name sim_noise_type:=uniform">
 
     <sensor name="${name}">
       <!-- MuJoCo ROS 2 Control specific tags-->
       <param name="mujoco_type">fts</param>
       <param name="mujoco_sensor_name">${name}</param>
+      <param name="noise_distribution">${sim_noise_type}</param>
 
       <state_interface name="force.x"/>
       <state_interface name="force.y"/>
