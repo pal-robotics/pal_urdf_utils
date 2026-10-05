@@ -2,8 +2,8 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.11.3 (2026-10-05)
+-------------------
 * Merge branch 'ft/noise_type' into 'humble-devel'
   Add sim noise type param to the ros2_control_force_torque_sensor
   See merge request robots/pal_urdf_utils!52
