@@ -2,6 +2,12 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update link and joint name
+* added imu tracking link
+* Contributors: andreacapodacqua
+
 2.11.3 (2026-10-05)
 -------------------
 * Merge branch 'ft/noise_type' into 'humble-devel'
