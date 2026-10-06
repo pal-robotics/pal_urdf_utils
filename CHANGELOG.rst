@@ -2,8 +2,8 @@
 Changelog for package pal_urdf_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.11.4 (2026-10-06)
+-------------------
 * update link and joint name
 * added imu tracking link
 * Contributors: andreacapodacqua
