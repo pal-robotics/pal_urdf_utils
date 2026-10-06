@@ -61,13 +61,13 @@
       <origin xyz="0.012 0.0185 0.0484" rpy="0 0 0"/>  <!-- position computed respect to the optical center of the laser z:0.0628 -->
     </joint>
 
-    <joint name="imu_tracking_joint" type="fixed">
+    <joint name="${name}_imu_tracking_joint" type="fixed">
       <parent link="${name}_link"/>
-      <child link="imu_tracking_link"/>
+      <child link="${name}_imu_tracking_link"/>
       <origin xyz="0.012 0.0185 0.0484" rpy="${imu_R} 0 0"/>
     </joint>
 
-    <link name="imu_tracking_link"/>
+    <link name="${name}_imu_tracking_link"/>
 
     <!-- gazebo extensions -->
     <xacro:sick_picoscan150core_laser_gazebo name="${name}" ros_topic="${ros_topic}" update_rate="${update_rate}" min_angle="${min_angle}" max_angle="${max_angle}"/>
